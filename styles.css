@@ -1,0 +1,2026 @@
+/* ============================================================
+   MI MASCOTA VIRTUAL — ESTILOS "PIXEL SUAVE"
+   ------------------------------------------------------------
+   1. Colores y bases
+   2. Cabecera, nombre y monedas
+   3. La habitación
+   4. La mascota
+   5. Decoración de la habitación
+   6. Indicadores y muelle de acciones
+   7. Paneles (tienda, misiones, armario)
+   8. Avisos y animaciones
+   9. Pantallas pequeñas
+   ============================================================ */
+
+/* ---------- 1. Colores y bases ---------- */
+:root {
+  --contorno: #6b4257;
+  --tinta: #4a3040;
+  --tinta-suave: #8b6b7e;
+
+  --crema: #fff6ec;
+  --papel: #fffaf3;
+  --rosa: #ffd3e3;
+  --rosa-fuerte: #ff8fb0;
+  --lila: #d9c9ff;
+  --menta: #b8ecd6;
+  --amarillo: #ffe08a;
+  --madera: #e8c6a4;
+  --madera-oscura: #d3a982;
+
+  --sombra: rgba(107, 66, 87, 0.18);
+  --fuente: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --fuente-pixel: "Consolas", "Courier New", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 26px 14px 44px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  font-family: var(--fuente);
+  color: var(--tinta);
+
+  background-color: #f7eaf4;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(214, 178, 205, 0.28) 2px, transparent 2px),
+    linear-gradient(160deg, #fdf0f9 0%, #eef1ff 55%, #f1fbf5 100%);
+  background-size: 18px 18px, auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.oculto {
+  display: none !important;
+}
+
+/* Bloque principal del juego */
+.juego {
+  width: min(620px, 100%);
+  padding: 12px;
+  border: 4px solid var(--contorno);
+  background: var(--crema);
+  box-shadow: 8px 8px 0 rgba(107, 66, 87, 0.16);
+}
+
+/* ---------- 2. Cabecera, nombre y monedas ---------- */
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.placa {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border: 3px solid var(--contorno);
+  background: var(--papel);
+  box-shadow: 3px 3px 0 var(--sombra);
+  min-width: 0;
+}
+
+.placa-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.placa-animo {
+  font-family: var(--fuente-pixel);
+  font-size: 0.56rem;
+  letter-spacing: 0.3px;
+  color: var(--tinta-suave);
+  white-space: nowrap;
+}
+
+.placa-punto {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  background: var(--rosa-fuerte);
+  box-shadow: inset 0 0 0 3px var(--rosa);
+}
+
+.placa h1 {
+  margin: 0;
+  font-family: var(--fuente-pixel);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-mini {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 2px solid var(--contorno);
+  background: var(--rosa);
+  color: var(--tinta);
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn-mini:hover {
+  background: var(--rosa-fuerte);
+  color: #fff;
+}
+
+.monedero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 3px solid var(--contorno);
+  background: var(--amarillo);
+  box-shadow: 3px 3px 0 var(--sombra);
+  font-family: var(--fuente-pixel);
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: transform 0.12s steps(2);
+}
+
+.monedero.gana {
+  animation: latido 0.45s steps(3);
+}
+
+.monedas-suma {
+  position: absolute;
+  right: 8px;
+  top: -6px;
+  padding: 1px 5px;
+  border: 2px solid var(--contorno);
+  background: var(--menta);
+  font-size: 0.66rem;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+}
+
+.monedas-suma.visible {
+  animation: sube-suma 0.9s steps(4) forwards;
+}
+
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(1.12); }
+}
+
+@keyframes sube-suma {
+  0% { opacity: 0; transform: translateY(8px); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-16px); }
+}
+
+/* Formulario para cambiar el nombre */
+.form-nombre {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 6px;
+  border: 3px solid var(--contorno);
+  background: var(--papel);
+}
+
+.form-nombre input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 2px solid #e3cbd9;
+  background: #fff;
+  font: inherit;
+  font-family: var(--fuente-pixel);
+  font-size: 0.85rem;
+  color: var(--tinta);
+}
+
+.form-nombre input:focus {
+  outline: none;
+  border-color: var(--rosa-fuerte);
+}
+
+.form-nombre button {
+  padding: 8px 12px;
+  border: 2px solid var(--contorno);
+  background: var(--rosa);
+  font-family: var(--fuente-pixel);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.form-nombre button:hover {
+  background: var(--rosa-fuerte);
+  color: #fff;
+}
+
+/* Barra de nivel y experiencia */
+.nivel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 5px 8px;
+  border: 3px solid var(--contorno);
+  background: var(--papel);
+}
+
+.nivel-chip {
+  flex-shrink: 0;
+  padding: 2px 5px;
+  border: 2px solid var(--contorno);
+  background: var(--lila);
+  font-family: var(--fuente-pixel);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.nivel-barra {
+  flex: 1;
+  height: 10px;
+  padding: 1px;
+  border: 2px solid var(--contorno);
+  background: #e9dad2;
+}
+
+.nivel-barra i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #8fd9b8, #ffe08a 55%, #ff9dc0);
+  transition: width 0.45s steps(6);
+}
+
+.nivel-xp {
+  flex-shrink: 0;
+  font-family: var(--fuente-pixel);
+  font-size: 0.53rem;
+  color: var(--tinta-suave);
+  white-space: nowrap;
+}
+
+/* ---------- 3. La habitación ---------- */
+:root {
+  --alto-mascota: 182px;
+  --base-mascota: 44px;
+  --escala-base: 1;
+  --escala-nivel: 1;
+  --escala-mascota: calc(var(--escala-base) * var(--escala-nivel));
+}
+
+.escena {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  border: 4px solid var(--contorno);
+  background: #ffe8f2;
+  isolation: isolate;
+}
+
+/* Pared con papel pintado de cuadritos */
+.pared {
+  position: absolute;
+  inset: 0 0 38% 0;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.6) 0 2px, transparent 2px 30px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.6) 0 2px, transparent 2px 30px),
+    linear-gradient(180deg, #ffe4f0, #f7dcf1);
+}
+
+/* Rodapié */
+.pared::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14px;
+  border-top: 3px solid #e5b7cd;
+  border-bottom: 3px solid #d9a2bf;
+  background: #f6d3e3;
+}
+
+/* Suelo de tablones */
+.suelo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  border-top: 4px solid #cfa685;
+  background:
+    repeating-linear-gradient(90deg, #edd2b7 0 46px, #e3c3a6 46px 50px),
+    linear-gradient(180deg, #f0d7bd, #e3c2a3);
+}
+
+.suelo::before {
+  content: "";
+  position: absolute;
+  top: 48%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #d6ad8c;
+  opacity: 0.45;
+}
+
+/* Ventana con sol y nubes */
+.ventana {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 116px;
+  height: 100px;
+  overflow: hidden;
+  border: 5px solid #fff;
+  background: linear-gradient(180deg, #bfe6ff, #e8f9ff);
+  box-shadow: 0 0 0 3px #d9b3c9;
+}
+
+.ventana::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(#fff, #fff) center / 5px 100% no-repeat,
+    linear-gradient(#fff, #fff) center / 100% 5px no-repeat;
+  z-index: 3;
+}
+
+.ventana-sol {
+  position: absolute;
+  top: 9px;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  background: var(--amarillo);
+  box-shadow: 0 0 0 4px #fff3c4;
+}
+
+.ventana-nube {
+  position: absolute;
+  width: 26px;
+  height: 8px;
+  background: #fff;
+  box-shadow: 8px -6px 0 -1px #fff;
+  animation: mover-nube 7s steps(3) infinite alternate;
+}
+
+.nube-a { top: 44px; left: 6px; }
+.nube-b { top: 24px; left: 46px; width: 20px; animation-delay: -3s; }
+
+@keyframes mover-nube {
+  from { transform: translateX(0); }
+  to { transform: translateX(10px); }
+}
+
+/* ---------- 4. La mascota ---------- */
+.mascota {
+  position: absolute;
+  left: 50%;
+  bottom: var(--base-mascota);
+  z-index: 5;
+  cursor: pointer;
+  transform: translateX(-50%) scale(var(--escala-mascota));
+  transform-origin: bottom center;
+  transition: transform 0.5s ease;
+}
+
+.mascota-visual {
+  position: relative;
+  width: 168px;
+  height: 182px;
+  animation: flotar 2.6s steps(2) infinite;
+}
+
+.capa {
+  position: absolute;
+  inset: 0;
+}
+
+.sprite {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+}
+
+.sprite i {
+  display: block;
+}
+
+.mascota.feliz .mascota-visual {
+  animation-duration: 1.6s;
+}
+
+.mascota.durmiendo .mascota-visual {
+  animation-duration: 5s;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Salto al interactuar */
+.mascota.saltar .mascota-visual {
+  animation: salto 0.6s steps(4);
+}
+
+@keyframes salto {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-22px); }
+  60% { transform: translateY(0); }
+  80% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+/* Sacudida cuando no hay monedas suficientes */
+.mascota.no .mascota-visual {
+  animation: negar 0.4s steps(4);
+}
+
+@keyframes negar {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* Estirón al subir de nivel */
+.mascota.crecer .mascota-visual {
+  animation: crecer 0.75s steps(6);
+}
+
+@keyframes crecer {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.12); }
+  60% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+/* Bocadillo */
+.burbuja {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--base-mascota) + var(--alto-mascota) * var(--escala-mascota) + 8px);
+  z-index: 9;
+  max-width: 74%;
+  padding: 8px 14px;
+  border: 3px solid var(--contorno);
+  background: var(--papel);
+  font-size: 0.83rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, 6px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+.burbuja.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.burbuja::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-right: 3px solid var(--contorno);
+  border-bottom: 3px solid var(--contorno);
+  background: var(--papel);
+  transform: rotate(45deg);
+}
+
+/* Partículas que suben */
+.particulas {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particula {
+  position: absolute;
+  bottom: 120px;
+  font-size: 1.15rem;
+  animation: subir 1.3s steps(8) forwards;
+}
+
+@keyframes subir {
+  0% { opacity: 0; transform: translateY(10px) scale(0.7); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.15) rotate(var(--giro, 10deg)); }
+}
+
+/* Noche */
+.capa-noche {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  background:
+    radial-gradient(2px 2px at 16% 20%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(2px 2px at 72% 12%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.5px 1.5px at 48% 30%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.5px 1.5px at 88% 32%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(2px 2px at 30% 44%, rgba(255, 255, 255, 0.6), transparent),
+    linear-gradient(180deg, rgba(58, 44, 96, 0.44), rgba(84, 64, 128, 0.36));
+}
+
+.escena.noche .capa-noche {
+  opacity: 1;
+}
+
+/* Con lámpara, la noche es más cálida */
+.escena.con-lampara .capa-noche {
+  background:
+    radial-gradient(60% 45% at 78% 22%, rgba(255, 214, 150, 0.35), transparent),
+    radial-gradient(2px 2px at 16% 20%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(2px 2px at 48% 26%, rgba(255, 255, 255, 0.7), transparent),
+    linear-gradient(180deg, rgba(58, 44, 96, 0.52), rgba(96, 64, 96, 0.42));
+}
+
+/* ---------- 5. Decoración de la habitación ---------- */
+.decoracion {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.deco {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Alfombra de nubes */
+.deco-alfombra {
+  left: 50%;
+  bottom: 12px;
+  width: 300px;
+  height: 62px;
+  transform: translateX(-50%);
+  border: 4px solid #d98cae;
+  background:
+    radial-gradient(circle, #ffc2da 2.5px, transparent 3px) 0 0 / 20px 20px,
+    #ffd3e4;
+  box-shadow:
+    inset 0 0 0 6px #ffe7f1,
+    inset 0 0 0 11px #ffc2da;
+}
+
+.deco-alfombra::before,
+.deco-alfombra::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 10px;
+  right: 10px;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #ffc2da 0 8px, transparent 8px 16px);
+}
+
+.deco-alfombra::after {
+  top: auto;
+  bottom: 100%;
+}
+
+/* Alfombra de corazón */
+.deco-corazon {
+  left: 50%;
+  bottom: 14px;
+  width: 240px;
+  height: 58px;
+  transform: translateX(-50%);
+  border: 4px solid #d98cae;
+  border-radius: 50% / 46%;
+  background:
+    radial-gradient(circle, #ffc2da 2.4px, transparent 2.8px) 0 0 / 18px 18px,
+    #ffe1ee;
+  box-shadow: inset 0 0 0 5px #fff0f6;
+}
+
+.deco-corazon span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: #ff8fb0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.deco-corazon span::before,
+.deco-corazon span::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ff8fb0;
+}
+
+.deco-corazon span::before { top: -7px; left: 0; }
+.deco-corazon span::after { left: -7px; top: 0; }
+
+/* Póster de luna */
+.deco-poster {
+  top: 26px;
+  right: 26px;
+  width: 86px;
+  height: 72px;
+  border: 5px solid #8a6f9c;
+  background:
+    radial-gradient(circle at 72% 28%, #fff2c4 1.6px, transparent 2px),
+    radial-gradient(circle at 26% 66%, #fff 1.4px, transparent 1.8px),
+    radial-gradient(circle at 50% 16%, #fff 1.2px, transparent 1.6px),
+    radial-gradient(circle at 24% 24%, #fff 1.2px, transparent 1.6px),
+    linear-gradient(160deg, #3c3465, #6b5a9c);
+  box-shadow: inset 0 0 0 3px #fff3f8;
+}
+
+.deco-poster::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ffe08a;
+}
+
+.deco-poster::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #443a70;
+}
+
+/* Reloj de cuco */
+.deco-reloj {
+  top: 18px;
+  right: 28px;
+  width: 74px;
+  height: 112px;
+}
+
+.deco-reloj::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 74px;
+  height: 74px;
+  border: 5px solid #a9774c;
+  border-radius: 50%;
+  background:
+    linear-gradient(#6b4257, #6b4257) center / 4px 18px no-repeat,
+    linear-gradient(#6b4257, #6b4257) center / 12px 4px no-repeat,
+    #fff8ec;
+  box-shadow: inset 0 0 0 4px #e8c6a4;
+}
+
+.deco-reloj::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 8px;
+  height: 6px;
+  margin-left: -4px;
+  background: #a9774c;
+}
+
+.deco-reloj span {
+  position: absolute;
+  top: 86px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border: 3px solid #a9774c;
+  border-radius: 50%;
+  background: #ffe08a;
+}
+
+.deco-reloj span::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 3px;
+  height: 12px;
+  margin-left: -1.5px;
+  background: #a9774c;
+}
+
+/* Cuadro de flores */
+.deco-cuadro {
+  top: 26px;
+  right: 26px;
+  width: 86px;
+  height: 72px;
+  border: 5px solid #d9a06e;
+  background: #fff3f8;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.deco-cuadro::before {
+  content: "";
+  position: absolute;
+  inset: 12px 14px;
+  background:
+    radial-gradient(circle at 50% 50%, #ffd166 5px, transparent 5.5px),
+    radial-gradient(circle at 50% 22%, #ff9dc0 8px, transparent 8.5px),
+    radial-gradient(circle at 50% 78%, #ff9dc0 8px, transparent 8.5px),
+    radial-gradient(circle at 24% 50%, #ff9dc0 8px, transparent 8.5px),
+    radial-gradient(circle at 76% 50%, #ff9dc0 8px, transparent 8.5px),
+    radial-gradient(circle at 22% 84%, #b8ecd6 7px, transparent 7.5px),
+    radial-gradient(circle at 82% 86%, #b8ecd6 6px, transparent 6.5px);
+  background-repeat: no-repeat;
+}
+
+/* Guirnalda de banderines */
+.deco-guirnalda {
+  top: 8px;
+  left: 50%;
+  width: 76%;
+  height: 34px;
+  transform: translateX(-50%);
+  border-top: 3px solid #a97a92;
+}
+
+.deco-guirnalda span {
+  position: absolute;
+  top: 0;
+  width: 14px;
+  height: 18px;
+  border: 2px solid #6b4257;
+  border-top: 0;
+}
+
+.deco-guirnalda span:nth-child(1) { left: 6%; background: #ff9dc0; }
+.deco-guirnalda span:nth-child(2) { left: 20%; background: #ffe08a; }
+.deco-guirnalda span:nth-child(3) { left: 34%; background: #b8ecd6; }
+.deco-guirnalda span:nth-child(4) { left: 48%; background: #d9c9ff; }
+.deco-guirnalda span:nth-child(5) { left: 62%; background: #ffc2da; }
+.deco-guirnalda span:nth-child(6) { left: 76%; background: #ffe08a; }
+.deco-guirnalda span:nth-child(7) { left: 90%; background: #b8ecd6; }
+
+/* Planta grande */
+.deco-planta {
+  left: 26px;
+  bottom: 16px;
+  width: 78px;
+  height: 96px;
+}
+
+.deco-planta::before {
+  content: "";
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  width: 18px;
+  height: 46px;
+  margin-left: -9px;
+  background: #8fd9b8;
+  box-shadow:
+    -20px 10px 0 #a7e4c8,
+    20px 10px 0 #a7e4c8,
+    -36px 24px 0 #b8ecd6,
+    36px 24px 0 #b8ecd6;
+}
+
+.deco-planta::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 50px;
+  height: 32px;
+  margin-left: -25px;
+  border: 3px solid #d98f68;
+  background: #f0a982;
+  box-shadow: inset 0 -8px 0 #e29772, inset 0 6px 0 #f7c1a0;
+}
+
+/* Cactus pequeñito */
+.deco-cactus {
+  left: 34px;
+  bottom: 16px;
+  width: 70px;
+  height: 92px;
+}
+
+.deco-cactus::before {
+  content: "";
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  width: 34px;
+  height: 54px;
+  margin-left: -17px;
+  border: 3px solid #4f9e74;
+  border-radius: 16px 16px 8px 8px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 9px, rgba(79, 158, 116, 0.35) 9px 11px),
+    #8fd9b8;
+}
+
+.deco-cactus::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 44px;
+  height: 26px;
+  margin-left: -22px;
+  border: 3px solid #d98f68;
+  background: #f0a982;
+  box-shadow: inset 0 -7px 0 #e29772, inset 0 5px 0 #f7c1a0;
+}
+
+.deco-cactus span {
+  position: absolute;
+  bottom: 66px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border: 3px solid #d98cae;
+  border-radius: 50%;
+  background: #ff9dc0;
+}
+
+/* Estantería de cuentos */
+.deco-estanteria {
+  top: 142px;
+  left: 20px;
+  width: 106px;
+  height: 86px;
+  border: 4px solid #b98a5f;
+  background: #e8c6a4;
+  box-shadow: inset 0 -3px 0 #d3a982, 0 4px 0 rgba(107, 66, 87, 0.12);
+}
+
+.deco-estanteria::before,
+.deco-estanteria::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #c99a6c;
+}
+
+.deco-estanteria::before { top: 41px; }
+.deco-estanteria::after { top: 81px; }
+
+.deco-estanteria span {
+  position: absolute;
+  bottom: 48px;
+  width: 10px;
+  border: 2px solid #6b4257;
+  border-bottom: 0;
+}
+
+.deco-estanteria span:nth-child(1) { left: 8px; height: 26px; background: #ff9dc0; }
+.deco-estanteria span:nth-child(2) { left: 20px; height: 32px; background: #b8ecd6; }
+.deco-estanteria span:nth-child(3) { left: 32px; height: 22px; background: #ffe08a; }
+.deco-estanteria span:nth-child(4) { left: 44px; height: 30px; background: #d9c9ff; }
+.deco-estanteria span:nth-child(5) { left: 78px; height: 24px; background: #ffc2da; }
+
+.deco-estanteria span:nth-child(6) {
+  left: 12px;
+  bottom: 8px;
+  height: 22px;
+  background: #a8d8ff;
+}
+
+.deco-estanteria span:nth-child(7) {
+  left: 24px;
+  bottom: 8px;
+  height: 28px;
+  background: #ffd3a8;
+}
+
+/* Camita acogedora */
+.deco-cama {
+  right: 14px;
+  bottom: 26px;
+  width: 158px;
+  height: 88px;
+  border: 4px solid #a9774c;
+  background: #e5bd97;
+  box-shadow: 0 6px 0 rgba(107, 66, 87, 0.14);
+}
+
+.deco-cama::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 5px;
+  height: 30px;
+  border: 3px solid #d8b79c;
+  border-bottom: 0;
+  background: #fffaf3;
+}
+
+.deco-cama::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  height: 40px;
+  border-top: 3px solid #7fc3a8;
+  background: repeating-linear-gradient(90deg, #b8ecd6 0 16px, #a7e0c9 16px 32px);
+}
+
+.deco-cama .almohada {
+  position: absolute;
+  left: 11px;
+  top: 10px;
+  width: 48px;
+  height: 20px;
+  border: 3px solid #e3c4ae;
+  background: #ffe9f1;
+}
+
+/* Sillón blandito */
+.deco-sofa {
+  right: 14px;
+  bottom: 26px;
+  width: 150px;
+  height: 78px;
+  border: 4px solid #7a5fa0;
+  border-radius: 10px 10px 6px 6px;
+  background: linear-gradient(180deg, #c9b6ff 0 46%, #b8a4f5 46% 100%);
+  box-shadow: inset 0 -10px 0 #a993e8, 0 6px 0 rgba(107, 66, 87, 0.14);
+}
+
+.deco-sofa::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  height: 26px;
+  border: 3px solid #8a6f9c;
+  border-radius: 4px;
+  background:
+    linear-gradient(
+      90deg,
+      #fff0f6 0 calc(50% - 3px),
+      transparent calc(50% - 3px) calc(50% + 3px),
+      #fff0f6 calc(50% + 3px) 100%
+    );
+}
+
+.deco-sofa::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  bottom: -12px;
+  width: 12px;
+  height: 12px;
+  background: #8a6f9c;
+  box-shadow: 108px 0 0 #8a6f9c;
+}
+
+/* Mesita de té */
+.deco-mesita {
+  right: 42px;
+  bottom: 24px;
+  width: 112px;
+  height: 84px;
+}
+
+.deco-mesita::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 112px;
+  height: 14px;
+  border: 3px solid #a9774c;
+  background: #e8c6a4;
+  box-shadow: inset 0 3px 0 #f4d6b8;
+}
+
+.deco-mesita::after {
+  content: "";
+  position: absolute;
+  top: 26px;
+  left: 14px;
+  width: 8px;
+  height: 50px;
+  background: #c99566;
+  box-shadow: 72px 0 0 #c99566;
+}
+
+.deco-mesita span {
+  position: absolute;
+  right: 16px;
+  top: -4px;
+  width: 26px;
+  height: 16px;
+  border: 3px solid #6b4257;
+  border-radius: 0 0 7px 7px;
+  background: #fff;
+}
+
+.deco-mesita span::before {
+  content: "";
+  position: absolute;
+  right: -11px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border: 3px solid #6b4257;
+  border-left: 0;
+  border-radius: 50%;
+}
+
+.deco-mesita span::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  bottom: 100%;
+  width: 3px;
+  height: 9px;
+  background: #cbb7c4;
+  box-shadow: 8px -4px 0 #cbb7c4;
+}
+
+/* Lámpara de papel colgante */
+.deco-lampara {
+  top: 0;
+  right: 176px;
+  width: 76px;
+  height: 150px;
+}
+
+.deco-lampara::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 54px;
+  margin-left: -1px;
+  background: #8a6478;
+}
+
+.deco-lampara::after {
+  content: "";
+  position: absolute;
+  top: 52px;
+  left: 2px;
+  width: 72px;
+  height: 56px;
+  border: 4px solid #c9855f;
+  border-radius: 46% 46% 40% 40% / 54% 54% 46% 46%;
+  background: radial-gradient(circle at 46% 38%, #fff6d6, #ffd79a 62%, #ffc879);
+  box-shadow: 0 0 34px 12px rgba(255, 214, 150, 0.5);
+}
+
+/* Farolillo de colores */
+.deco-farolillo {
+  top: 0;
+  right: 176px;
+  width: 76px;
+  height: 150px;
+}
+
+.deco-farolillo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 44px;
+  margin-left: -1px;
+  background: #8a6478;
+}
+
+.deco-farolillo::after {
+  content: "";
+  position: absolute;
+  top: 42px;
+  left: 8px;
+  width: 60px;
+  height: 62px;
+  border: 4px solid #b06a4c;
+  border-radius: 50% / 42%;
+  background: repeating-linear-gradient(
+    90deg,
+    #ffd3a8 0 12px,
+    #ffc2da 12px 24px,
+    #b8ecd6 24px 36px,
+    #ffe08a 36px 48px,
+    #d9c9ff 48px 60px
+  );
+  box-shadow: 0 0 30px 8px rgba(255, 214, 150, 0.45);
+}
+
+/* Juguetes en el suelo */
+.deco-pelota,
+.deco-raton,
+.deco-cascabel,
+.deco-patito {
+  right: 190px;
+  bottom: 24px;
+  animation: juguete 3.2s steps(2) infinite;
+}
+
+.deco-pelota {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #b9678a;
+  background: repeating-linear-gradient(45deg, #ffb3d0 0 6px, #ff8fb0 6px 12px);
+}
+
+.deco-raton {
+  width: 34px;
+  height: 22px;
+  border: 3px solid #8a7a90;
+  border-radius: 50% 50% 45% 45%;
+  background: #ded4e4;
+}
+
+.deco-raton::before,
+.deco-raton::after {
+  content: "";
+  position: absolute;
+  top: -9px;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #8a7a90;
+  border-radius: 50%;
+  background: #f2ecf6;
+}
+
+.deco-raton::before { left: 0; }
+.deco-raton::after { right: 0; }
+
+.deco-cascabel {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #b98a2f;
+  background: var(--amarillo);
+}
+
+.deco-cascabel::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 3px;
+  height: 9px;
+  margin-left: -1px;
+  background: #b98a2f;
+}
+
+@keyframes juguete {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Patito de goma */
+.deco-patito {
+  width: 42px;
+  height: 32px;
+}
+
+.deco-patito::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 20px;
+  border: 3px solid #c08a2f;
+  border-radius: 50% 50% 45% 45%;
+  background: #ffe08a;
+}
+
+.deco-patito span {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #c08a2f;
+  border-radius: 50%;
+  background: #ffe08a;
+}
+
+.deco-patito span::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 3px;
+  height: 3px;
+  background: #3d2a36;
+}
+
+.deco-patito span::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  top: 6px;
+  width: 8px;
+  height: 5px;
+  border: 2px solid #c08a2f;
+  border-left: 0;
+  background: #ff9d4d;
+}
+
+/* Lola, la osita compañera */
+.deco-lola {
+  right: 10px;
+  bottom: 30px;
+  z-index: 2;
+  width: 100px;
+  height: 120px;
+  filter: drop-shadow(0 4px 0 rgba(107, 66, 87, 0.16));
+  animation: lola-respira 4s steps(2) infinite;
+  transform-origin: bottom center;
+}
+
+.deco-lola.saluda {
+  animation: lola-saluda 0.75s steps(3);
+}
+
+@keyframes lola-respira {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes lola-saluda {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  30% { transform: translateY(-7px) rotate(-5deg); }
+  60% { transform: translateY(-2px) rotate(5deg); }
+}
+
+/* ---------- 6. Indicadores y muelle de acciones ---------- */
+.hud {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.medidor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 3px solid var(--contorno);
+  background: var(--papel);
+}
+
+.medidor-icono {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.segmentos {
+  flex: 1;
+  display: flex;
+  gap: 2px;
+}
+
+.segmentos i {
+  flex: 1;
+  height: 9px;
+  background: #e9dad2;
+}
+
+.medidor[data-stat="felicidad"] .segmentos i.on { background: #ff9dc0; }
+.medidor[data-stat="energia"] .segmentos i.on { background: #c3a9ff; }
+.medidor[data-stat="hambre"] .segmentos i.on { background: #8fd9b8; }
+.medidor[data-stat="hambre"].medio .segmentos i.on { background: #ffd166; }
+.medidor[data-stat="hambre"].alto .segmentos i.on { background: #ff8fa0; }
+
+.medidor-numero {
+  width: 20px;
+  text-align: right;
+  font-family: var(--fuente-pixel);
+  font-size: 0.68rem;
+  color: var(--tinta-suave);
+}
+
+/* Muelle con los seis botones */
+.muelle {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px;
+  border: 4px solid var(--contorno);
+  background: var(--papel);
+  box-shadow: 4px 4px 0 var(--sombra);
+}
+
+.boton {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 2px 6px;
+  border: 3px solid var(--contorno);
+  color: var(--tinta);
+  font-family: var(--fuente-pixel);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(107, 66, 87, 0.22);
+  transition: transform 0.07s steps(2), box-shadow 0.07s steps(2), filter 0.15s;
+}
+
+.boton:hover {
+  filter: brightness(1.05);
+}
+
+.boton:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(107, 66, 87, 0.22);
+}
+
+.boton-icono {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.boton-comer { background: #ffd9e6; }
+.boton-mimo { background: #ece0ff; }
+.boton-jugar { background: #cdf0e2; }
+.boton-panel { background: #fff; }
+
+.punto {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid #fff;
+  background: #ff5f8a;
+  animation: latido 1.4s steps(2) infinite;
+}
+
+.pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  font-family: var(--fuente-pixel);
+  font-size: 0.62rem;
+  color: var(--tinta-suave);
+}
+
+.enlace {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: inherit;
+  color: var(--tinta-suave);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.enlace:hover {
+  color: var(--tinta);
+}
+
+.pie-botones {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ---------- 7. Paneles: tienda, misiones y armario ---------- */
+.telon {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(60, 38, 54, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.telon.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hoja {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  width: min(620px, 100%);
+  max-height: 76vh;
+  border: 4px solid var(--contorno);
+  border-bottom: 0;
+  background: var(--crema);
+  box-shadow: 0 -8px 0 rgba(107, 66, 87, 0.12);
+  transform: translate(-50%, 105%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+  pointer-events: none;
+}
+
+.hoja.abierta {
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.hoja-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 3px solid #e6cddb;
+  background: #ffeaf4;
+}
+
+.hoja-cabecera h2 {
+  margin: 0;
+  font-family: var(--fuente-pixel);
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.cerrar {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 3px solid var(--contorno);
+  background: #fff;
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cerrar:hover {
+  background: var(--rosa);
+}
+
+.hoja-saldo {
+  margin: 0;
+  padding: 9px 12px 0;
+  font-family: var(--fuente-pixel);
+  font-size: 0.68rem;
+  color: var(--tinta-suave);
+}
+
+.hoja-saldo strong {
+  color: var(--tinta);
+}
+
+.pestanas {
+  display: flex;
+  gap: 6px;
+  padding: 9px 12px 0;
+}
+
+.pestanas button {
+  flex: 1;
+  padding: 7px 4px;
+  border: 3px solid var(--contorno);
+  background: #fff;
+  font-family: var(--fuente-pixel);
+  font-size: 0.6rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.pestanas button.activa {
+  background: var(--rosa);
+  box-shadow: inset 0 -3px 0 rgba(107, 66, 87, 0.12);
+}
+
+.hoja-cuerpo {
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.objeto {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid var(--contorno);
+  background: #fff;
+}
+
+.objeto-icono {
+  display: grid;
+  place-items: center;
+  height: 54px;
+  border-bottom: 3px solid #f0d3e1;
+  background: #ffeaf4;
+  font-size: 1.5rem;
+}
+
+.objeto-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding: 8px;
+}
+
+.objeto h3 {
+  margin: 0;
+  font-family: var(--fuente-pixel);
+  font-size: 0.68rem;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.objeto p {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: var(--tinta-suave);
+}
+
+.objeto .bonus {
+  margin-top: auto;
+  font-size: 0.63rem;
+  color: #7a5f9c;
+}
+
+.objeto-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px;
+  border-top: 3px dashed #f0d3e1;
+}
+
+.precio {
+  font-family: var(--fuente-pixel);
+  font-size: 0.7rem;
+}
+
+.btn-comprar {
+  padding: 6px 9px;
+  border: 3px solid var(--contorno);
+  background: var(--menta);
+  font-family: var(--fuente-pixel);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(107, 66, 87, 0.2);
+}
+
+.btn-comprar:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.btn-comprar:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(107, 66, 87, 0.2);
+}
+
+.btn-comprar:disabled {
+  background: #eee2dd;
+  color: #a8929d;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-comprar.comprado {
+  background: var(--lila);
+}
+
+.mision {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 3px solid var(--contorno);
+  background: #fff;
+}
+
+.mision + .mision {
+  margin-top: 10px;
+}
+
+.mision.lista {
+  border-color: #6fb99b;
+  background: #f2fff9;
+}
+
+.mision-emoji {
+  font-size: 1.3rem;
+}
+
+.mision h3 {
+  margin: 0 0 5px;
+  font-family: var(--fuente-pixel);
+  font-size: 0.67rem;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.mision-barra {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.mision-barra i {
+  flex: 1;
+  height: 8px;
+  background: #ece0da;
+}
+
+.mision-barra i.on {
+  background: #ffb3d0;
+}
+
+.mision.lista .mision-barra i.on {
+  background: #8fd9b8;
+}
+
+.mision-meta {
+  font-family: var(--fuente-pixel);
+  font-size: 0.6rem;
+  color: var(--tinta-suave);
+}
+
+.nota {
+  margin: 12px 2px 0;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--tinta-suave);
+  text-align: center;
+}
+
+.grupo {
+  margin-bottom: 16px;
+}
+
+.grupo h3 {
+  margin: 0 0 8px;
+  font-family: var(--fuente-pixel);
+  font-size: 0.66rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border: 3px solid var(--contorno);
+  background: #fff;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.chip small {
+  font-size: 0.6rem;
+  color: var(--tinta-suave);
+}
+
+.chip.activo {
+  background: #fff0d1;
+  box-shadow: inset 0 0 0 2px var(--amarillo);
+}
+
+.vacio {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--tinta-suave);
+}
+
+/* Selección de mascota */
+.nota-arriba {
+  margin-top: 0;
+  text-align: left;
+}
+
+.especies {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.especie {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border: 3px solid var(--contorno);
+  background: #fff;
+  color: var(--tinta);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.especie:hover {
+  background: #fff6fb;
+}
+
+.especie.activa {
+  background: #fff0d1;
+  box-shadow: inset 0 0 0 2px var(--amarillo);
+}
+
+.especie strong {
+  font-family: var(--fuente-pixel);
+  font-size: 0.58rem;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.especie small {
+  font-size: 0.55rem;
+  color: var(--tinta-suave);
+  text-align: center;
+}
+
+.especie-dibujo {
+  display: grid;
+  place-items: center;
+  height: 84px;
+}
+
+.vista-mascota {
+  position: relative;
+}
+
+/* ---------- 8. Avisos ---------- */
+.avisos {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: min(420px, 92vw);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.aviso {
+  padding: 7px 12px;
+  border: 3px solid var(--contorno);
+  background: var(--papel);
+  font-family: var(--fuente-pixel);
+  font-size: 0.66rem;
+  text-align: center;
+  box-shadow: 4px 4px 0 rgba(107, 66, 87, 0.2);
+  animation: entra-aviso 0.2s steps(3), se-va-aviso 0.3s ease 2.3s forwards;
+}
+
+@keyframes entra-aviso {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes se-va-aviso {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #c9a4ff;
+  outline-offset: 2px;
+}
+
+/* ---------- 9. Pantallas pequeñas ---------- */
+@media (max-width: 520px) {
+  :root {
+    --alto-mascota: 155px;
+    --base-mascota: 36px;
+    --escala-base: 0.85;
+  }
+
+  body {
+    padding: 10px 8px 30px;
+  }
+
+  .juego {
+    padding: 8px;
+    border-width: 3px;
+    box-shadow: 5px 5px 0 rgba(107, 66, 87, 0.16);
+  }
+
+  .escena {
+    height: 330px;
+  }
+
+  .placa h1 {
+    font-size: 0.82rem;
+  }
+
+  .medidor {
+    gap: 4px;
+    padding: 5px 5px;
+  }
+
+  .medidor-numero {
+    display: none;
+  }
+
+  .muelle {
+    gap: 4px;
+    padding: 6px;
+    border-width: 3px;
+  }
+
+  .boton {
+    padding: 6px 1px 5px;
+    font-size: 0.5rem;
+    border-width: 2px;
+  }
+
+  .boton-icono {
+    font-size: 0.95rem;
+  }
+
+  .deco-alfombra {
+    width: 240px;
+    height: 54px;
+  }
+
+  .deco-corazon {
+    width: 200px;
+    height: 52px;
+  }
+
+  .deco-cama {
+    width: 132px;
+    height: 84px;
+    right: 8px;
+  }
+
+  .deco-sofa {
+    width: 128px;
+    height: 72px;
+    right: 8px;
+  }
+
+  .deco-sofa::after {
+    box-shadow: 86px 0 0 #8a6f9c;
+  }
+
+  .deco-mesita {
+    width: 96px;
+    right: 30px;
+  }
+
+  .deco-mesita::before {
+    width: 96px;
+  }
+
+  .deco-mesita::after {
+    box-shadow: 56px 0 0 #c99566;
+  }
+
+  .deco-estanteria {
+    width: 92px;
+    height: 76px;
+    top: 128px;
+  }
+
+  .deco-lampara,
+  .deco-farolillo {
+    right: 48px;
+    transform: scale(0.86);
+    transform-origin: top center;
+  }
+
+  .deco-planta,
+  .deco-cactus {
+    transform: scale(0.86);
+    transform-origin: bottom left;
+  }
+
+  .deco-reloj {
+    right: 20px;
+    transform: scale(0.88);
+    transform-origin: top right;
+  }
+
+  .deco-lola {
+    right: 2px;
+    bottom: 24px;
+  }
+
+  .especies {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nivel-xp {
+    font-size: 0.48rem;
+  }
+
+  /* En el móvil los avisos salen abajo: así no tapan el nombre */
+  .avisos {
+    top: auto;
+    bottom: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+
